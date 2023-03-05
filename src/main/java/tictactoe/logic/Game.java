@@ -1,7 +1,7 @@
-import java.nio.charset.StandardCharsets;
+package tictactoe.logic;
+
 import java.util.Arrays;
 import java.util.Objects;
-import java.util.Scanner;
 import java.util.stream.Stream;
 
 public class Game {
@@ -13,37 +13,13 @@ public class Game {
 		currentPlayer = Player.X;
 	}
 
-	public static void main(String[] args) {
-		Game game = new Game();
-		game.printGameBoard();
-		try (Scanner scan = new Scanner(System.in, StandardCharsets.UTF_8)) {
-			while (game.getCurrentGameStatus() == GameStatus.RUNNING) {
-				System.out.print("X: ");
-				int x = scan.nextInt();
-				System.out.print("Y: ");
-				int y = scan.nextInt();
-
-				game.markCell(x, y);
-				game.printGameBoard();
-			}
-		}
-
-		System.out.println(game.getCurrentGameStatus());
-	}
-
 	public GameStatus getCurrentGameStatus() {
 		if (getWinner() != null) {
-			if (getWinner() == Player.X) {
-				return GameStatus.X_WON;
-			} else {
-				return GameStatus.O_WON;
-			}
+			return getWinner() == Player.X ? GameStatus.X_WON : GameStatus.O_WON;
 		}
-
 		if (isDraw()) {
 			return GameStatus.DRAW;
 		}
-
 		return GameStatus.RUNNING;
 	}
 
@@ -60,7 +36,7 @@ public class Game {
 	 */
 	public void markCell(int x, int y) {
 		if (board[x][y] != null) {
-			throw new RuntimeException("This cell has already marked.");
+			throw new IllegalArgumentException("This cell has already marked.");
 		}
 		board[x][y] = currentPlayer;
 		currentPlayer = currentPlayer == Player.X ? Player.O : Player.X;
